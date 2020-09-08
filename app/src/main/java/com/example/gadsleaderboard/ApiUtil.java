@@ -4,6 +4,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +16,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import static com.example.gadsleaderboard.ApiUtil.Endpoint.LEARNING_HOURS;
@@ -89,29 +93,11 @@ public class ApiUtil {
         URL url = buildUrl(endpoint);
         try {
             String jsonString = getJson(url);
-            JSONArray jsonArray = new JSONArray(jsonString);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String name = jsonObject.getString("name");
-                String country = jsonObject.getString("country");
-                String badgeUrl = jsonObject.getString("badgeUrl");
-                if (endpoint == LEARNING_HOURS) {
-                    int hours = jsonObject.getInt("hours");
-                    Leader leader = new Leader(name, hours, country, badgeUrl);
-                    leaders.add(leader);
-                } else if (endpoint == SKILL_IQ) {
-                    int score = jsonObject.getInt("score");
-                    Leader leader = new Leader(name, country, badgeUrl, score);
-                    leaders.add(leader);
-                }
-            }
+            Gson gson = new Gson();
+            leaders = gson.fromJson(jsonString, new TypeToken<List<Leader>>(){}.getType());
         } catch (IOException exception) {
-            exception.printStackTrace();
-        } catch (JSONException exception) {
             exception.printStackTrace();
         }
         return leaders;
     }
-
-
 }
