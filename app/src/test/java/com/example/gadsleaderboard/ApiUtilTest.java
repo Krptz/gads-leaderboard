@@ -6,8 +6,12 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
+import static com.example.gadsleaderboard.ApiUtil.Endpoint.LEARNING_HOURS;
+import static com.example.gadsleaderboard.ApiUtil.Endpoint.SKILL_IQ;
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class ApiUtilTest {
 
@@ -20,8 +24,8 @@ public class ApiUtilTest {
 
     @Test
     public void testBuildUrl() {
-        URL learningHoursUrl = apiUtil.buildUrl(ApiUtil.Endpoint.LEARNING_HOURS);
-        URL skillIqUrl = apiUtil.buildUrl(ApiUtil.Endpoint.SKILL_IQ);
+        URL learningHoursUrl = apiUtil.buildUrl(LEARNING_HOURS);
+        URL skillIqUrl = apiUtil.buildUrl(SKILL_IQ);
         System.out.println(learningHoursUrl.toString());
         System.out.println(skillIqUrl.toString());
         assertEquals("https://gadsapi.herokuapp.com/api/hours", learningHoursUrl.toString());
@@ -29,19 +33,38 @@ public class ApiUtilTest {
     }
 
     @Test
-    public void getJson() {
-        URL learningHoursUrl = apiUtil.buildUrl(ApiUtil.Endpoint.LEARNING_HOURS);
-        URL skillIqUrl = apiUtil.buildUrl(ApiUtil.Endpoint.SKILL_IQ);
+    public void testGetJson() {
+        URL learningHoursUrl = apiUtil.buildUrl(LEARNING_HOURS);
+        URL skillIqUrl = apiUtil.buildUrl(SKILL_IQ);
         try {
-            System.out.println(apiUtil.getJson(learningHoursUrl));
+            String learningHoursJsonString = apiUtil.getJson(learningHoursUrl);
+            assertNotEquals("", learningHoursJsonString);
+            System.out.println(learningHoursJsonString);
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-
         try {
-            System.out.println(apiUtil.getJson(skillIqUrl));
+            String skillIqJsonString = apiUtil.getJson(skillIqUrl);
+            assertNotEquals("", skillIqJsonString);
+            System.out.println(skillIqJsonString);
         } catch (IOException exception) {
             exception.printStackTrace();
         }
     }
+
+    @Test
+    public void testGetLeadersFromJson() {
+        ArrayList<Leader> learningHoursLeaders = apiUtil.getLeadersFromJson(LEARNING_HOURS);
+        ArrayList<Leader> skillIqLeaders = apiUtil.getLeadersFromJson(SKILL_IQ);
+        assertEquals(20, learningHoursLeaders.size());
+        assertEquals(20, skillIqLeaders.size());
+        for (Leader leader : learningHoursLeaders) {
+            System.out.println(leader.getName() + " " + leader.getHours() + " " + leader.getCountry());
+        }
+        for (Leader leader : skillIqLeaders) {
+            System.out.println(leader.getName() + " " + leader.getScore() + " " + leader.getCountry());
+        }
+    }
 }
+
+
