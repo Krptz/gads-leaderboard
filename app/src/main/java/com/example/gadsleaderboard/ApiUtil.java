@@ -1,15 +1,9 @@
 package com.example.gadsleaderboard;
 
-import android.net.Uri;
-import android.os.Build;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,13 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static com.example.gadsleaderboard.ApiUtil.Endpoint.LEARNING_HOURS;
-import static com.example.gadsleaderboard.ApiUtil.Endpoint.SKILL_IQ;
-import static com.example.gadsleaderboard.Leader.*;
+class ApiUtil {
 
-public class ApiUtil {
-
-    private final String BASE_API_URI = "https://gadsapi.herokuapp.com";
+    final String BASE_API_URL = "https://gadsapi.herokuapp.com";
+    final String BASE_SUBMISSION_URL = "https://docs.google.com/forms/d/e/";
     private static ApiUtil INSTANCE;
 
     enum Endpoint {
@@ -42,6 +33,7 @@ public class ApiUtil {
         public String getRoute() {
             return route;
         }
+
     }
 
     private ApiUtil() {
@@ -54,20 +46,17 @@ public class ApiUtil {
         return INSTANCE;
     }
 
-
-    public URL buildUrl(Endpoint endpoint) {
+    URL buildUrl(Endpoint endpoint) {
         URL url = null;
         try {
-            url = new URL(BASE_API_URI + endpoint.getRoute());
+            url = new URL(BASE_API_URL + endpoint.getRoute());
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-
         return url;
-
     }
 
-    public String getJson(URL url) throws IOException {
+    String getJson(URL url) throws IOException {
         String json = "";
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         try {
@@ -100,4 +89,5 @@ public class ApiUtil {
         }
         return leaders;
     }
+
 }

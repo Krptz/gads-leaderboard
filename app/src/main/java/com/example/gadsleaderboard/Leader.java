@@ -1,11 +1,28 @@
 package com.example.gadsleaderboard;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class Leader {
 
+    @SerializedName("name")
+    @Expose
     private String name;
+
+    @SerializedName("hours")
+    @Expose
     private int hours;
+
+    @SerializedName("score")
+    @Expose
     private int score;
+
+    @SerializedName("country")
+    @Expose
     private String country;
+
+    @SerializedName("bagdeUrl")
+    @Expose
     private String badgeUrl;
 
     public Leader(String name, int hours, String country, String badgeUrl) {
@@ -61,4 +78,5 @@ public class Leader {
     public void setBadgeUrl(String badgeUrl) {
         this.badgeUrl = badgeUrl;
     }
+
 }
